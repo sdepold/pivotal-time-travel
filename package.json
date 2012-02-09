@@ -1,0 +1,17 @@
+{
+  "author": "Sascha Depold <sascha@depold.com> (http://depold.com)",
+  "name": "pivotal-time-travel",
+  "version": "0.0.0",
+  "repository": {
+    "url": ""
+  },
+  "main": "app.js",
+  "engines": {
+    "node": "~0.6.2"
+  },
+  "dependencies": {
+    "moment": "1.4.0",
+    "pivotal": "0.1.1"
+  },
+  "devDependencies": {}
+}
