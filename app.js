@@ -2,11 +2,11 @@ var pivotal   = require("pivotal")
   , moment    = require("moment")
   , yesterday = moment().subtract('days', 1).sod().toDate()
   , token     = process.env.TOKEN
-  , username  = process.env.USERNAME
+  , usernames = process.env.USERNAME.split(',').map(function(username) { return username.trim() })
   , projectId = process.env.PROJECTID
   , offset    = process.env.OFFSET || 1500
 
-if(!token || !username || !projectId)
+if(!token || (usernames.length == 0) || !projectId)
   throw new Error('Run app like this: PROJECTID=id TOKEN=asd USERNAME=foobar node app.js')
 
 var storyTimestampToDate = function(d) {
@@ -19,27 +19,38 @@ pivotal.getStories(projectId, {
   filter: 'includedone:true',
   offset: offset
 }, function(err, data) {
-  if(err) return console.log(err.errors.error[0])
+  if(err)
+    return console.log(err.errors.error[0])
 
-  stories = data.story.filter(function(story) {
-    var isOwnedByMe   = (story.owned_by == username)
-      , isInDateRange = (storyTimestampToDate(story.updated_at) > yesterday)
+  var storiesByOwner = {}
 
-    return isOwnedByMe && isInDateRange
+  data.story.forEach(function(story) {
+    var isInDateRange     = (storyTimestampToDate(story.updated_at) > yesterday)
+      , isOwnerByRelevant = (usernames.indexOf(story.owned_by) != -1)
+
+    if(isInDateRange && isOwnerByRelevant) {
+      storiesByOwner[story.owned_by] = storiesByOwner[story.owned_by] || []
+      storiesByOwner[story.owned_by].push(story)
+    }
   })
 
-  stories = stories.sort(function(a, b) {
-    return storyTimestampToDate(a.updated_at) - storyTimestampToDate(b.updated_at)
-  })
+  for(var owner in storiesByOwner) {
+    var stories = storiesByOwner[owner].sort(function(a, b) {
+      return storyTimestampToDate(a.updated_at) - storyTimestampToDate(b.updated_at)
+    })
 
-  stories.forEach(function(story) {
-    var template = "[{{date}}] [{{type}}] {{status}}: {{name}}"
-      , message  = template
-          .replace('{{date}}', story.updated_at)
-          .replace('{{type}}', story.story_type.toUpperCase())
-          .replace('{{status}}', story.current_state.toUpperCase())
-          .replace('{{name}}', story.name)
+    console.log('\nStories for ' + owner)
+    console.log('==============================')
 
-    console.log(message)
-  })
+    stories.forEach(function(story) {
+      var template = "[{{date}}] [{{type}}] {{status}}: {{name}}"
+        , message  = template
+            .replace('{{date}}', story.updated_at)
+            .replace('{{type}}', story.story_type.toUpperCase())
+            .replace('{{status}}', story.current_state.toUpperCase())
+            .replace('{{name}}', story.name)
+
+      console.log(message)
+    })
+  }
 })
