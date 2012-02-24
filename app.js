@@ -1,56 +1,35 @@
-var pivotal   = require("pivotal")
-  , moment    = require("moment")
-  , yesterday = moment().subtract('days', 1).sod().toDate()
-  , token     = process.env.TOKEN
-  , usernames = process.env.USERNAME.split(',').map(function(username) { return username.trim() })
-  , projectId = process.env.PROJECTID
-  , offset    = process.env.OFFSET || 1500
 
-if(!token || (usernames.length == 0) || !projectId)
-  throw new Error('Run app like this: PROJECTID=id TOKEN=asd USERNAME=foobar node app.js')
+/**
+ * Module dependencies.
+ */
 
-var storyTimestampToDate = function(d) {
-  return moment(d, 'YYYY/MM/DD HH:mm:ss CET').toDate()
-}
+var express = require('express')
+  , routes = require('./routes');
 
-pivotal.useToken(token)
+var app = module.exports = express.createServer();
 
-pivotal.getStories(projectId, {
-  filter: 'includedone:true',
-  offset: offset
-}, function(err, data) {
-  if(err)
-    return console.log(err.errors.error[0])
+// Configuration
 
-  var storiesByOwner = {}
+app.configure(function(){
+  app.set('views', __dirname + '/views');
+  app.set('view engine', 'jade');
+  app.use(express.bodyParser());
+  app.use(express.methodOverride());
+  app.use(app.router);
+  app.use(express.static(__dirname + '/public'));
+});
 
-  data.story.forEach(function(story) {
-    var isInDateRange     = (storyTimestampToDate(story.updated_at) > yesterday)
-      , isOwnerByRelevant = (usernames.indexOf(story.owned_by) != -1)
+app.configure('development', function(){
+  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+});
 
-    if(isInDateRange && isOwnerByRelevant) {
-      storiesByOwner[story.owned_by] = storiesByOwner[story.owned_by] || []
-      storiesByOwner[story.owned_by].push(story)
-    }
-  })
+app.configure('production', function(){
+  app.use(express.errorHandler());
+});
 
-  for(var owner in storiesByOwner) {
-    var stories = storiesByOwner[owner].sort(function(a, b) {
-      return storyTimestampToDate(a.updated_at) - storyTimestampToDate(b.updated_at)
-    })
+// Routes
 
-    console.log('\nStories for ' + owner)
-    console.log('==============================')
+app.get('/', routes.index);
 
-    stories.forEach(function(story) {
-      var template = "[{{date}}] [{{type}}] {{status}}: {{name}}"
-        , message  = template
-            .replace('{{date}}', story.updated_at)
-            .replace('{{type}}', story.story_type.toUpperCase())
-            .replace('{{status}}', story.current_state.toUpperCase())
-            .replace('{{name}}', story.name)
-
-      console.log(message)
-    })
-  }
-})
+app.listen(3000);
+console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
