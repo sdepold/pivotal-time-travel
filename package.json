@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "moment": "1.4.0",
-    "pivotal": "0.1.1"
+    "pivotal": "0.1.1",
+    "express": "2.5.8",
+    "jade": ">= 0.0.1"
   },
   "devDependencies": {}
 }
