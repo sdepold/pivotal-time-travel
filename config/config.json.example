@@ -1,5 +1,8 @@
 {
-  "projectId": 123456,
-  "token": "abc123",
-  "usernames": "Me, You, Firstname Lastname"
+  "projectId": 123456789,
+  "token": "abcd1234",
+  "usernames": "Me, You, Firstname Lastname",
+  "dbName": "pivotal-time-travel",
+  "dbUsername": "root",
+  "dbPassword": null
 }

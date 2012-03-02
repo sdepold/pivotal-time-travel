@@ -1,6 +1,6 @@
 var pivotal   = require("pivotal")
   , moment    = require("moment")
-  , yesterday = moment().subtract('days', 1).sod().toDate()
+  , yesterday = moment().subtract('days', 4).sod().toDate()
   , token     = process.env.TOKEN
   , usernames = process.env.USERNAME.split(',').map(function(username) { return username.trim() })
   , projectId = process.env.PROJECTID

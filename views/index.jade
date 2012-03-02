@@ -1,2 +1,30 @@
-h1= title
-p Welcome to #{title}
+script
+  $(function() {
+    $('.activities').each(function() {
+      var $element = $(this)
+      $element.load('/activities', {
+        username: $element.data('username')
+      })
+    })
+  })
+
+h1 PivotalTacker TimeTravel
+
+#project-information
+  span.icon-info-sign
+  span
+    = "&nbsp;"
+    = "Project: " + config.projectId
+    = ", Activities: " + activityCount
+
+br
+br
+
+#users
+  - config.usernames.split(',').forEach(function(username) {
+    h2= (username = username.trim())
+
+    hr
+
+    .activities(data-username=username)
+  - })
