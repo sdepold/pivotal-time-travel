@@ -17,7 +17,7 @@ PivotalTracker.prototype.fillDatabase = function(projectId) {
     , iteratePivotalCallback = function(err, data) {
         createActivityEntriesFromApiData.call(self, err, data)
 
-        if(data && data.story.length > 0) {
+        if(data && data.story && data.story.length > 0) {
           self.offset += data.story.length
           iteratePivotal.call(self, projectId, iteratePivotalCallback)
         }
@@ -43,6 +43,9 @@ var createActivityEntriesFromApiData = function(err, data) {
 
   if(err && err.errors)
     return console.log(err.errors.error[0])
+
+  if(!data || !data.story ||( data.story.length == 0))
+    return
 
   data.story.forEach(function(story) {
     Activity.find(parseInt(story.id)).success(function(activity) {

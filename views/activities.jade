@@ -1,4 +1,7 @@
-ul
+ul.nav.nav-list
+  li.nav-header=username
   - activities.forEach(function(activity) {
-    li= activity.title
+    li
+      span.label.label-success Success
+      a(href='#')= activity.title
   - })

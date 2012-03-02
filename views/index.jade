@@ -22,9 +22,6 @@ br
 
 #users
   - config.usernames.split(',').forEach(function(username) {
-    h2= (username = username.trim())
-
+    .well.activities(data-username=username.trim(), style="padding: 8px 0;")
     hr
-
-    .activities(data-username=username)
   - })

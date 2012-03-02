@@ -43,10 +43,15 @@ app.post('/activities', function(req, res) {
   var username = req.param('username')
   if(config.usernames.indexOf(username) > -1) {
     console.log('user found with name: ' + username)
-    Activity.findAll({ where: {
-      ownedBy: username
-    }}).success(function(activities) {
+    Activity.findAll({
+      where: [
+        "ownedBy = ? and updatedAt > ?",
+        username,
+        moment().subtract('days', 4).sod().toDate()
+      ]
+    }).success(function(activities) {
       res.render('activities', {
+        username: username,
         activities: activities,
         layout: false
       })
