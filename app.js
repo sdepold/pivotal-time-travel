@@ -18,6 +18,21 @@ app.configure(function(){
   app.use(express.methodOverride())
   app.use(app.router)
   app.use(express.static(__dirname + '/public'))
+  app.helpers({
+    labelForStoryType: function(activity) {
+      var klass = {
+        feature: 'success',
+        chore: 'info',
+        bug: 'warning'
+      }[activity.storyType]
+
+      return "<span class='label label-" + klass + "'>" + activity.storyType + "</span>"
+    },
+
+    labelForStoryStatus: function(activity) {
+
+    }
+  })
   sequelize.sync()
 })
 

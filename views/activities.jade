@@ -1,7 +1,7 @@
 ul.nav.nav-list
-  li.nav-header=username
+  li.nav-header= username
   - activities.forEach(function(activity) {
     li
-      span.label.label-success Success
+      != labelForStoryType(activity)
       a(href='#')= activity.title
   - })

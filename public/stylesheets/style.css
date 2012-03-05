@@ -1,3 +1,14 @@
 body {
   padding: 50px;
 }
+
+#users .activities li:not(.nav-header) {
+  padding: 3px 0px;
+}
+
+#users .activities li:not(.nav-header) .label {
+  float: left;
+  margin-right: 10px;
+  width: 50px;
+  text-align: center;
+}
