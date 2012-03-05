@@ -11,6 +11,10 @@ var config    = JSON.parse(fs.readFileSync(__dirname + "/config/config.json"))
 
 var Activity  = sequelize.import(__dirname + '/models/activity')
 
+String.prototype.toSlug = function() {
+  return this.match(/([\-a-zA-Z]+)/gi).join('-')
+}
+
 app.configure(function(){
   app.set('views', __dirname + '/views')
   app.set('view engine', 'jade')
@@ -30,7 +34,9 @@ app.configure(function(){
     },
 
     labelForStoryStatus: function(activity) {
+      var klass = {
 
+      }
     }
   })
   sequelize.sync()
