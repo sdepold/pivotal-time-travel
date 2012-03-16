@@ -6,7 +6,7 @@ var PivotalTracker = module.exports = function(sequelize, token, options) {
   this.token     = token
   this.offset    = 0
   this.options   = _.extend(options || {}, {
-    itemsPerIteration: 100
+    itemsPerIteration: 500
   })
 
   pivotal.useToken(this.token)
