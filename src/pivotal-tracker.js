@@ -6,32 +6,51 @@ var PivotalTracker = module.exports = function(sequelize, token, options) {
   this.token     = token
   this.offset    = 0
   this.options   = _.extend(options || {}, {
-    itemsPerIteration: 500
+    itemsPerIteration: 500,
+    projectId:         null
   })
 
   pivotal.useToken(this.token)
 }
 
-PivotalTracker.prototype.fillDatabase = function(projectId) {
-  var self                   = this
-    , iteratePivotalCallback = function(err, data) {
-        createActivityEntriesFromApiData.call(self, err, data)
+PivotalTracker.prototype.syncDatabaseWithPivotal = function() {
+  console.log('Synchronizing database with pivotal')
 
-        if(data && data.story && data.story.length > 0) {
-          self.offset += data.story.length
-          iteratePivotal.call(self, projectId, iteratePivotalCallback)
-        }
-      }
+  var self = this
 
-  iteratePivotal.call(this, projectId, iteratePivotalCallback)
+  var iteratePivotalCallback = function(err, data) {
+    createActivityEntriesFromApiData.call(self, err, data)
+
+    if(data && data.story && data.story.length > 0) {
+      self.offset += data.story.length
+      iteratePivotal.call(self, iteratePivotalCallback)
+    }
+  }
+
+  iteratePivotal.call(this, iteratePivotalCallback)
+}
+
+PivotalTracker.prototype.scheduleUpdate = function(options) {
+  var self = this
+
+  options = _.extend({
+    delay: 1000 * 60 * 5 // 5 minutes
+  }, options || {})
+
+  this.updateIntervalId = setInterval(function() {
+    self.syncDatabaseWithPivotal()
+  }, options.delay)
+
+  this.syncDatabaseWithPivotal()
+  console.log('Tracker will update the database every ' + options.delay + "ms.")
 }
 
 /////////////
 // private //
 /////////////
 
-var iteratePivotal = function(projectId, callback) {
-  pivotal.getStories(projectId, {
+var iteratePivotal = function(callback) {
+  pivotal.getStories(this.options.projectId, {
     filter: 'includedone:true',
     offset: this.offset,
     limit:  this.options.itemsPerIteration
