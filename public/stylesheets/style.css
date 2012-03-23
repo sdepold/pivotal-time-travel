@@ -2,6 +2,10 @@ body {
   padding: 50px;
 }
 
+body > .container {
+  width: auto;
+}
+
 #users .activities li:not(.nav-header) {
   padding: 5px 0px;
 }
