@@ -4,7 +4,8 @@ ul.nav.nav-list
     - slug = activity.title.toSlug()
     li
       != labelForStoryType(activity)
+      != labelForStoryStatus(activity)
       a(href='#' + slug, name=slug)
-        = "[" + activity.status + "] "
         = activity.title
+      .clear
   - })
