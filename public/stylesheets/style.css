@@ -3,14 +3,21 @@ body {
 }
 
 #users .activities li:not(.nav-header) {
-  padding: 3px 0px;
+  padding: 5px 0px;
 }
 
 #users .activities li:not(.nav-header) .label {
   float: left;
   margin-right: 10px;
-  width: 50px;
+  width: 75px;
   text-align: center;
+}
+
+#users .activities li:not(.nav-header) a {
+  margin: 0;
+  padding: 0;
+  float: left;
+  padding: 2px 4px 3px;
 }
 
 .nav-header {
@@ -18,4 +25,8 @@ body {
   padding: 0px  0px 10px 0px !important;
   margin: 0px 0px 10px !important;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.clear {
+  clear: both;
 }
