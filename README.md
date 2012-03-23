@@ -4,19 +4,28 @@
 $ curl -d username=$USERNAME -d password=$PASSWORD -X POST https://www.pivotaltracker.com/services/v3/tokens/active
 ```
 
-## Run the app ##
+## Run the web version ##
+
+```console
+$ npm install
+$ cp config/config.json.example config/config.json
+$ pico config/config.json
+$ node app.js
+```
+
+## Run the command script (deprecated) ##
 
 ```console
 $ npm install
 
 $ # with a single user:
-$ TOKEN=<pivotalTrackerToken> USERNAME="<pivotalTrackerUsername>" PROJECTID=<projectId> node app.js
+$ TOKEN=<pivotalTrackerToken> USERNAME="<pivotalTrackerUsername>" PROJECTID=<projectId> node pivlog.js
 
 $ # or with multiple:
-$ TOKEN=<pivotalTrackerToken> USERNAME="<pivotalTrackerUsername1>, <pivotalTrackerUsername2>" PROJECTID=<projectId> node app.js
+$ TOKEN=<pivotalTrackerToken> USERNAME="<pivotalTrackerUsername1>, <pivotalTrackerUsername2>" PROJECTID=<projectId> node pivlog.js
 ```
 
-## Output of the app ##
+## Output of the script ##
 
 ```console
 Stories for Sascha Depold
