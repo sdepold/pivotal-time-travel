@@ -1,11 +1,6 @@
 script
   $(function() {
-    $('.activities').each(function() {
-      var $element = $(this)
-      $element.load('/activities', {
-        username: $element.data('username')
-      })
-    })
+    Application.Index.init()
   })
 
 h1 PivotalTacker TimeTravel
@@ -20,7 +15,7 @@ h1 PivotalTacker TimeTravel
 br
 br
 
-input(type="range", min="1, max="100", value="2")
+input(type="range", min="1", max="100", value="2", id="dateRangeSlider")
 
 #users
   - config.usernames.split(',').forEach(function(username) {
