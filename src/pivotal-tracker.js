@@ -1,33 +1,43 @@
 const pivotal = require("pivotal")
+    , util    = require("util")
     , _       = require("underscore")
 
 var PivotalTracker = module.exports = function(sequelize, token, options) {
-  this.sequelize = sequelize
-  this.token     = token
-  this.offset    = 0
-  this.options   = _.extend(options || {}, {
+  this.sequelize        = sequelize
+  this.token            = token
+  this.offset           = 0
+  this.currentlySyncing = false
+  this.options          = _.extend({
     itemsPerIteration: 500,
     projectId:         null
-  })
+  }, options || {})
 
   pivotal.useToken(this.token)
 }
 
 PivotalTracker.prototype.syncDatabaseWithPivotal = function() {
-  console.log('Synchronizing database with pivotal')
-
   var self = this
 
-  var iteratePivotalCallback = function(err, data) {
-    createActivityEntriesFromApiData.call(self, err, data)
+  if(self.currentlySyncing) {
+    console.log('Synchronization skipped because there is already one running')
+  } else {
+    console.log('Synchronizing database with pivotal')
 
-    if(data && data.story && data.story.length > 0) {
-      self.offset += data.story.length
-      iteratePivotal.call(self, iteratePivotalCallback)
+    var iteratePivotalCallback = function(err, data) {
+      createActivityEntriesFromApiData.call(self, err, data)
+
+      if(data && data.story && data.story.length > 0) {
+        self.offset += data.story.length
+        iteratePivotal.call(self, iteratePivotalCallback)
+      } else {
+        self.currentlySyncing = false
+        console.log('\nFinished synchronization.')
+      }
     }
-  }
 
-  iteratePivotal.call(this, iteratePivotalCallback)
+    self.currentlySyncing = true
+    iteratePivotal.call(self, iteratePivotalCallback)
+  }
 }
 
 PivotalTracker.prototype.scheduleUpdate = function(options) {
@@ -67,6 +77,7 @@ var createActivityEntriesFromApiData = function(err, data) {
     return
 
   data.story.forEach(function(story) {
+    util.print('.')
     Activity.find(parseInt(story.id)).success(function(activity) {
       if(!activity) {
         Activity.create({
@@ -83,41 +94,3 @@ var createActivityEntriesFromApiData = function(err, data) {
     })
   })
 }
-
-
-
-
-  // var onDataCallback = function(err, data) {
-  //   if(err && err.errors)
-  //     return console.log(err.errors.error[0])
-
-  //   data.story.forEach(function(story) {
-  //     A
-
-  //     if(isInDateRange && isOwnerByRelevant) {
-  //       storiesByOwner[story.owned_by] = storiesByOwner[story.owned_by] || []
-  //       storiesByOwner[story.owned_by].push(story)
-  //     }
-  //   })
-
-  //   for(var owner in storiesByOwner) {
-  //     var stories = storiesByOwner[owner].sort(function(a, b) {
-  //       return storyTimestampToDate(a.updated_at) - storyTimestampToDate(b.updated_at)
-  //     })
-
-  //     console.log('\nStories for ' + owner)
-  //     console.log('==============================')
-
-  //     stories.forEach(function(story) {
-  //       var template = "[{{date}}] [{{type}}] {{status}}: {{name}}"
-  //         , message  = template
-  //             .replace('{{date}}', story.updated_at)
-  //             .replace('{{type}}', story.story_type.toUpperCase())
-  //             .replace('{{status}}', story.current_state.toUpperCase())
-  //             .replace('{{name}}', story.name)
-
-  //       console.log(message)
-  //     })
-  //   }
-  // }
-
