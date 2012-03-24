@@ -10,7 +10,9 @@ const express   = require("express")
 // variables
 
 var sequelize = new Sequelize(config.dbName, config.dbUsername, config.dbPassword, {
-      logging: false
+      logging: false,
+      dialect: 'sqlite',
+      storage: 'database.sqlite'
     })
   , tracker   = new Tracker(sequelize, config.token, {
       projectId: config.projectId
@@ -32,8 +34,9 @@ app.configure(function(){
   app.use(app.router)
   app.use(express.static(__dirname + '/public'))
   app.helpers(require("./src/view-helpers"))
-  sequelize.sync()
- tracker.scheduleUpdate()
+  sequelize.sync().success(function() {
+    tracker.scheduleUpdate()
+  })
 })
 
 app.configure('development', function(){
