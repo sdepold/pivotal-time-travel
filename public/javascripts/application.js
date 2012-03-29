@@ -2,21 +2,41 @@ Application = {
   Index: {
     init: function() {
       this.loadStories()
-      this.observeSlider()
+      this.Slider.observe()
     },
 
-    observeSlider: function() {
-      console.log('blabla')
-      $('#dateRangeSlider').change(function() {
-        console.log(this.value)
-      })
+    Slider: {
+      getElement: function() {
+        return $('#dateRangeSlider input')
+      },
+
+      observe: function() {
+        var self = this
+
+        this.getElement().change(function() {
+          self.printValue()
+          Application.Index.loadStories()
+        })
+      },
+
+      printValue: function() {
+        $("#dateRangeSlider span").text(this.getValue())
+      },
+
+      getValue: function() {
+        return this.getElement().val()
+      }
     },
 
     loadStories: function() {
+      var self = this
+
       $('.activities').each(function() {
         var $element = $(this)
+
         $element.load('/activities', {
-          username: $element.data('username')
+          username: $element.data('username'),
+          range: self.Slider.getValue()
         })
       })
     }

@@ -1,6 +1,7 @@
 const pivotal = require("pivotal")
     , util    = require("util")
     , _       = require("underscore")
+    , moment  = require("moment")
 
 var PivotalTracker = module.exports = function(sequelize, token, options) {
   this.sequelize        = sequelize
@@ -80,6 +81,9 @@ var createActivityEntriesFromApiData = function(err, data) {
     util.print('.')
     Activity.find(parseInt(story.id)).success(function(activity) {
       if(!activity) {
+        var updatedAt = moment(story.updated_at, 'YYYY/MM/DD HH:mm:ss z').toDate()
+          , createdAt = moment(story.created_at, 'YYYY/MM/DD HH:mm:ss z').toDate()
+
         Activity.create({
           storyType:   story.story_type,
           title:       story.name,
@@ -87,8 +91,8 @@ var createActivityEntriesFromApiData = function(err, data) {
           id:          story.id,
           ownedBy:     story.owned_by,
           requestedBy: story.requested_by,
-          updatedAt:   story.updated_at,
-          createdAt:   story.created_at
+          updatedAt:   updatedAt,
+          createdAt:   createdAt
         })
       }
     })

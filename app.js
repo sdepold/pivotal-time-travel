@@ -1,6 +1,7 @@
 // constants
 
 const express   = require("express")
+    , connect   = require("connect")
     , fs        = require("fs")
     , Sequelize = require("sequelize")
     , moment    = require("moment")
@@ -29,6 +30,7 @@ require("./src/extensions/string")
 app.configure(function(){
   app.set('views', __dirname + '/views')
   app.set('view engine', 'jade')
+  app.use(connect.logger({ immediate: true, format: ":date :method | :status | :url (via :referrer)" }))
   app.use(express.bodyParser())
   app.use(express.methodOverride())
   app.use(app.router)
@@ -61,13 +63,13 @@ app.get('/', function(req, res) {
 
 app.post('/activities', function(req, res) {
   var username = req.param('username')
+
   if(config.usernames.indexOf(username) > -1) {
-    console.log('user found with name: ' + username)
     Activity.findAll({
       where: [
         "ownedBy = ? and updatedAt > ?",
         username,
-        moment().subtract('days', 4).sod().toDate()
+        moment().subtract('days', req.param('range') || 2).sod().toDate()
       ]
     }).success(function(activities) {
       res.render('activities', {
