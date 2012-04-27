@@ -3,7 +3,7 @@ body {
 }
 
 body > .container {
-  width: auto;
+  width: auto !important;
 }
 
 #users .activities li:not(.nav-header) {
@@ -33,4 +33,12 @@ body > .container {
 
 .clear {
   clear: both;
+}
+
+#dataRangeSliderContainer {
+  margin: 20px 0px;
+  color: #999;
+  text-transform: uppercase;
+  font-weight: bold;
+  line-height: 28px;
 }

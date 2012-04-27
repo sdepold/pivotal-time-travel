@@ -1,35 +1,43 @@
 Application = {
   Index: {
     init: function() {
+      this.Slider.init()
       this.loadStories()
-      this.Slider.observe()
     },
 
     Slider: {
-      getElement: function() {
-        return $('#dateRangeSlider input')
-      },
-
-      observe: function() {
+      init: function() {
         var self = this
 
-        this.getElement().change(function() {
-          self.printValue()
-          Application.Index.loadStories()
+        this.getElement().slider({
+          min: 1,
+          max: 20,
+          value: 1,
+          slide: function( event, ui ) {
+            self.setValue()
+            Application.Index.loadStories()
+          }
         })
-      },
 
-      printValue: function() {
-        $("#dateRangeSlider span").text(this.getValue())
+        this.setValue()
       },
 
       getValue: function() {
-        return this.getElement().val()
+        console.log(this.getElement().slider('value'))
+        return this.getElement().slider('value')
+      },
+
+      setValue: function() {
+        $('#dataRangeSliderValue span').text(this.getValue() + " day(s)")
+      },
+
+      getElement: function() {
+        return $('#dataRangeSlider')
       }
     },
 
     loadStories: function() {
-      var self = this
+      var self   = this
 
       $('.activities').each(function() {
         var $element = $(this)
