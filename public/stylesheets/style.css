@@ -41,4 +41,15 @@ body > .container {
   text-transform: uppercase;
   font-weight: bold;
   line-height: 28px;
+  width: 400px;
+}
+
+#layoutChooser {
+  float: right;
+  margin: 20px 0px;
+  color: #999;
+  text-transform: uppercase;
+  font-weight: bold;
+  line-height: 28px;
+  text-align: right;
 }

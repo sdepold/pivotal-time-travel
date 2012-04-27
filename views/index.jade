@@ -15,11 +15,20 @@ h1 PivotalTacker TimeTravel
 br
 br
 
+#layoutChooser
+  | Choose a layout/focus:
+  br
+  select(name="layout", size="1")
+    option user
+    option status
+
 #dataRangeSliderContainer
   #dataRangeSliderValue
     | Choose a time travel range:
     span
   #dataRangeSlider
+
+
 
 #users
   - config.usernames.split(',').forEach(function(username) {
