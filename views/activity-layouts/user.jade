@@ -1,7 +1,7 @@
 ul.nav.nav-list
   li.nav-header= username
   - activities.forEach(function(activity) {
-    - slug = activity.title.toSlug()
+    - var slug = activity.title.toSlug()
     li
       != labelForStoryType(activity)
       != labelForStoryStatus(activity)

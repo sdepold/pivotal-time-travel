@@ -37,7 +37,7 @@ app.configure(function(){
   app.use(express.static(__dirname + '/public'))
   app.helpers(require("./src/view-helpers"))
   sequelize.sync().success(function() {
-    tracker.scheduleUpdate()
+    // tracker.scheduleUpdate()
   })
 })
 
@@ -54,9 +54,11 @@ app.configure('production', function(){
 app.get('/', function(req, res) {
   Activity.count().success(function(cnt) {
     res.render('index', {
-      title: 'Express',
+      title: 'Pivotal TimeTravel',
       config: config,
-      activityCount: cnt
+      activityCount: cnt,
+      boardLayouts: ['user', 'state'],
+      boardLayout: req.param('layout') || 'user'
     })
   })
 })
@@ -68,11 +70,11 @@ app.post('/activities', function(req, res) {
     Activity.findAll({
       where: [
         "ownedBy = ? and updatedAt > ?",
-        username,
+        username.trim(),
         moment().subtract('days', req.param('range') || 2).sod().toDate()
       ]
     }).success(function(activities) {
-      res.render('activities', {
+      res.render('activity-layouts/' + (req.param('layout') || 'user'), {
         username: username,
         activities: activities,
         layout: false

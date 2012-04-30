@@ -1,0 +1,15 @@
+- var states = ['Started', 'Finished', 'Delivered', 'Accepted', 'Rejected']
+
+table.well.states
+  tr
+    th User
+    - states.forEach(function(state) {
+      th= state
+    - })
+  - config.usernames.split(',').forEach(function(username) {
+    tr(data-username=username, class="states-of-user")
+      td= username
+      - states.forEach(function(state) {
+        td(data-state=state)
+      - })
+  - })

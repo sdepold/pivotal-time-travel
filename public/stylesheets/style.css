@@ -53,3 +53,7 @@ body > .container {
   line-height: 28px;
   text-align: right;
 }
+
+table.well {
+  width: 100%;
+}

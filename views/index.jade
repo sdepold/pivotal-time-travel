@@ -19,8 +19,9 @@ br
   | Choose a layout/focus:
   br
   select(name="layout", size="1")
-    option user
-    option status
+    - boardLayouts.forEach(function(_boardLayout) {
+      option(selected=(_boardLayout == boardLayout))= _boardLayout
+    - })
 
 #dataRangeSliderContainer
   #dataRangeSliderValue
@@ -28,10 +29,4 @@ br
     span
   #dataRangeSlider
 
-
-
-#users
-  - config.usernames.split(',').forEach(function(username) {
-    .well.activities(data-username=username.trim(), style="padding: 8px 0;")
-    hr
-  - })
+!= partial('index-layouts/' + boardLayout)

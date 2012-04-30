@@ -1,0 +1,15 @@
+- var states = ['Started', 'Finished', 'Delivered', 'Accepted', 'Rejected']
+
+td= username
+- states.forEach(function(state) {
+  td(data-state=state)
+    - activities.forEach(function(activity) {
+      - var slug = activity.title.toSlug()
+      - if(activity.status.toLowerCase() == state.toLowerCase()) {
+        != labelForStoryType(activity)
+        a(href='#' + slug, name=slug)
+          = activity.title
+        br
+      - }
+    - })
+- })
