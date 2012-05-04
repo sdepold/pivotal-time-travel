@@ -81,21 +81,24 @@ var createActivityEntriesFromApiData = function(err, data) {
     util.print('.')
 
     Activity.find(parseInt(story.id)).success(function(activity) {
-      if(!activity) {
-        var updatedAt = moment(story.updated_at, 'YYYY/MM/DD HH:mm:ss z').toDate()
-          , createdAt = moment(story.created_at, 'YYYY/MM/DD HH:mm:ss z').toDate()
+      var updatedAt = moment(story.updated_at, 'YYYY/MM/DD HH:mm:ss z').toDate()
+        , createdAt = moment(story.created_at, 'YYYY/MM/DD HH:mm:ss z').toDate()
+        , options   = {
+            storyType:   story.story_type,
+            title:       story.name,
+            status:      story.current_state,
+            ownedBy:     story.owned_by,
+            requestedBy: story.requested_by,
+            labels:      story.labels,
+            updatedAt:   updatedAt,
+            createdAt:   createdAt
+          }
 
-        Activity.create({
-          storyType:   story.story_type,
-          title:       story.name,
-          status:      story.current_state,
-          id:          story.id,
-          ownedBy:     story.owned_by,
-          requestedBy: story.requested_by,
-          labels:      story.labels,
-          updatedAt:   updatedAt,
-          createdAt:   createdAt
-        })
+      if(activity) {
+        activity.updateAttributes(options)
+      } else {
+        options.id = story.id
+        Activity.create(options)
       }
     })
   })
