@@ -12,7 +12,7 @@ module.exports = function(sequelize, DataTypes) {
     timestamps: false,
     instanceMethods: {
       getLabels: function() {
-        return this.labels.split(',')
+        return this.labels ? this.labels.split(',') : []
       }
     }
   })
