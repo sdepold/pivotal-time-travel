@@ -53,7 +53,7 @@ PivotalTracker.prototype.scheduleUpdate = function(options) {
   }, options.delay)
 
   this.syncDatabaseWithPivotal()
-  console.log('Tracker will update the database every ' + options.delay + "ms.")
+  console.log('Tracker will update the database every ' + (options.delay / 1000) + "s.")
 }
 
 /////////////
@@ -79,6 +79,7 @@ var createActivityEntriesFromApiData = function(err, data) {
 
   data.story.forEach(function(story) {
     util.print('.')
+
     Activity.find(parseInt(story.id)).success(function(activity) {
       if(!activity) {
         var updatedAt = moment(story.updated_at, 'YYYY/MM/DD HH:mm:ss z').toDate()
@@ -91,6 +92,7 @@ var createActivityEntriesFromApiData = function(err, data) {
           id:          story.id,
           ownedBy:     story.owned_by,
           requestedBy: story.requested_by,
+          labels:      story.labels,
           updatedAt:   updatedAt,
           createdAt:   createdAt
         })

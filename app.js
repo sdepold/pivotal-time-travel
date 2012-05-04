@@ -6,6 +6,7 @@ const express   = require("express")
     , Sequelize = require("sequelize")
     , moment    = require("moment")
     , Tracker   = require("./src/pivotal-tracker.js")
+    , stylus    = require("stylus")
     , config    = JSON.parse(fs.readFileSync("./config/config.json"))
 
 // variables
@@ -30,6 +31,10 @@ require("./src/extensions/string")
 app.configure(function(){
   app.set('views', __dirname + '/views')
   app.set('view engine', 'jade')
+  app.use(stylus.middleware({
+    src: __dirname + '/stylesheets',
+    dest: __dirname + '/public'
+  }))
   app.use(connect.logger({ immediate: true, format: ":date :method | :status | :url (via :referrer)" }))
   app.use(express.bodyParser())
   app.use(express.methodOverride())
@@ -37,7 +42,7 @@ app.configure(function(){
   app.use(express.static(__dirname + '/public'))
   app.helpers(require("./src/view-helpers"))
   sequelize.sync().success(function() {
-    // tracker.scheduleUpdate()
+    tracker.scheduleUpdate()
   })
 })
 
@@ -53,6 +58,7 @@ app.configure('production', function(){
 
 app.get('/', function(req, res) {
   Activity.count().success(function(cnt) {
+    console.log(cnt)
     res.render('index', {
       title: 'Pivotal TimeTravel',
       config: config,
