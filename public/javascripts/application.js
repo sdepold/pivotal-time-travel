@@ -75,7 +75,7 @@ Application = {
 
         $layoutSelector.val($.cookie('layout'))
         $layoutSelector.change(function() {
-          $.cookie('layout', self.getLayout())
+          $.cookie('layout', self.getValue())
         })
       }
     },
