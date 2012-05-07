@@ -1,51 +1,7 @@
 Application = {
   Index: {
-    LayoutChooser: {
-      init: function() {
-        var $select = $('#layoutChooser select')
-          , self    = this
-
-        $select.change(function() {
-          location.href = '/?layout=' + self.getLayout()
-        })
-      },
-
-      getLayout: function() {
-        return $('#layoutChooser select').val()
-      }
-    },
-
-    Slider: {
-      init: function() {
-        var self = this
-
-        this.getElement().slider({
-          min: 1,
-          max: 20,
-          value: 1,
-          slide: function( event, ui ) {
-            self.setValue()
-            Application.Index.loadStories()
-          }
-        })
-
-        this.setValue()
-      },
-
-      getValue: function() {
-        return this.getElement().slider('value')
-      },
-
-      setValue: function() {
-        $('#dataRangeSliderValue span').text(this.getValue() + " day(s)")
-      },
-
-      getElement: function() {
-        return $('#dataRangeSlider')
-      }
-    },
-
     init: function() {
+      this.permanentizeInputs()
       this.Slider.init()
       this.LayoutChooser.init()
       this.loadStories()
@@ -54,7 +10,7 @@ Application = {
     loadStories: function() {
       var self = this
 
-      switch(Application.Index.LayoutChooser.getLayout()) {
+      switch(Application.Index.LayoutChooser.getValue()) {
         case 'user':
           self.loadStoriesForUserLayout()
           break;
@@ -92,6 +48,84 @@ Application = {
           range: self.Slider.getValue()
         })
       })
+    },
+
+    permanentizeInputs: function() {
+      this.permanentizeBoardType()
+      this.permanentizeTimeRange()
+      this.permanentizeSprintStart()
+    },
+
+    permanentizeBoardType: function() {
+      var $layoutSelector = Application.Index.LayoutChooser.getElement()
+
+      $layoutSelector.val($.cookie('layout'))
+      $layoutSelector.change(function() {
+        $.cookie('layout', Application.Index.LayoutChooser.getLayout())
+      })
+    },
+
+    permanentizeTimeRange: function() {
+      Application.Index.Slider.changeListener.push(function(value) {
+        $.cookie('slider', value)
+      })
+    },
+
+    permanentizeSprintStart: function() {
+
+    },
+
+    LayoutChooser: {
+      init: function() {
+        var self = this
+
+        this.getElement().change(function() {
+          location.href = '/?layout=' + self.getValue()
+        })
+      },
+
+      getElement: function() {
+        return $('#layoutChooser select')
+      },
+
+      getValue: function() {
+        return this.getElement().val()
+      }
+    },
+
+    Slider: {
+      init: function() {
+        var self = this
+
+        this.getElement().slider({
+          min: 1,
+          max: 20,
+          value: parseInt($.cookie('slider') || 1),
+          slide: function( event, ui ) {
+            self.setValue()
+            Application.Index.loadStories()
+            self.changeListener.forEach(function(fct) {
+              fct(self.getValue())
+            })
+          }
+        })
+
+        this.setValue()
+      },
+
+      changeListener: [],
+
+      getValue: function() {
+        return this.getElement().slider('value')
+      },
+
+      setValue: function() {
+        $('#dataRangeSliderValue span').text(this.getValue() + " day(s)")
+      },
+
+      getElement: function() {
+        return $('#dataRangeSlider')
+      }
     }
   }
 }
