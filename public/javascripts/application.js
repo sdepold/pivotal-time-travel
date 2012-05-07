@@ -1,9 +1,9 @@
 Application = {
   Index: {
     init: function() {
-      this.permanentizeInputs()
       this.Slider.init()
       this.LayoutChooser.init()
+      this.SprintStart.init()
       this.loadStories()
     },
 
@@ -45,39 +45,16 @@ Application = {
         $row.load('/activities', {
           layout: 'state',
           username: $row.data('username'),
-          range: self.Slider.getValue()
+          sprintStart: Application.Index.SprintStart.getValue()
         })
       })
-    },
-
-    permanentizeInputs: function() {
-      this.permanentizeBoardType()
-      this.permanentizeTimeRange()
-      this.permanentizeSprintStart()
-    },
-
-    permanentizeBoardType: function() {
-      var $layoutSelector = Application.Index.LayoutChooser.getElement()
-
-      $layoutSelector.val($.cookie('layout'))
-      $layoutSelector.change(function() {
-        $.cookie('layout', Application.Index.LayoutChooser.getLayout())
-      })
-    },
-
-    permanentizeTimeRange: function() {
-      Application.Index.Slider.changeListener.push(function(value) {
-        $.cookie('slider', value)
-      })
-    },
-
-    permanentizeSprintStart: function() {
-
     },
 
     LayoutChooser: {
       init: function() {
         var self = this
+
+        this.permanentize()
 
         this.getElement().change(function() {
           location.href = '/?layout=' + self.getValue()
@@ -90,12 +67,24 @@ Application = {
 
       getValue: function() {
         return this.getElement().val()
+      },
+
+      permanentize: function() {
+        var $layoutSelector = this.getElement()
+          , self            = this
+
+        $layoutSelector.val($.cookie('layout'))
+        $layoutSelector.change(function() {
+          $.cookie('layout', self.getLayout())
+        })
       }
     },
 
     Slider: {
       init: function() {
         var self = this
+
+        this.permanentize()
 
         this.getElement().slider({
           min: 1,
@@ -125,6 +114,39 @@ Application = {
 
       getElement: function() {
         return $('#dataRangeSlider')
+      },
+
+      permanentize: function() {
+        this.changeListener.push(function(value) {
+          $.cookie('slider', value)
+        })
+      }
+    },
+
+    SprintStart: {
+      init: function() {
+        this.permanentize()
+        this.getElement().datepicker().change(function() {
+          Application.Index.loadStories()
+        })
+      },
+
+      getElement: function() {
+        return $('#sprintStartContainer input')
+      },
+
+      getValue: function() {
+        return this.getElement().val()
+      },
+
+      permanentize: function() {
+        var self = this
+
+        this.getElement().val($.cookie('sprint-start'))
+
+        this.getElement().change(function() {
+          $.cookie('sprint-start', self.getValue())
+        })
       }
     }
   }

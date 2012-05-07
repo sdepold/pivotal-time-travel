@@ -4,6 +4,19 @@ body {
   > .container {
     width: auto !important;
   }
+
+  &.state {
+    #dataRangeSliderContainer { display: none; }
+    #sprintStartContainer {
+      display: block;
+      input { width: 400px; }
+    }
+  }
+
+  &.user {
+    #dataRangeSliderContainer { display: block; }
+    #sprintStartContainer { display: none; }
+  }
 }
 
 #users {
@@ -39,22 +52,22 @@ body {
   clear: both;
 }
 
-#dataRangeSliderContainer {
+#dataRangeSliderContainer,
+#layoutChooser,
+#sprintStartContainer {
   margin: 20px 0px;
   color: #999;
   text-transform: uppercase;
   font-weight: bold;
   line-height: 28px;
+}
+
+#dataRangeSliderContainer {
   width: 400px;
 }
 
 #layoutChooser {
   float: right;
-  margin: 20px 0px;
-  color: #999;
-  text-transform: uppercase;
-  font-weight: bold;
-  line-height: 28px;
   text-align: right;
 }
 

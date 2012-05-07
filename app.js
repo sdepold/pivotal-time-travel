@@ -73,12 +73,12 @@ app.post('/activities', function(req, res) {
   var username = req.param('username')
 
   if(config.usernames.indexOf(username) > -1) {
+    var updatedAt = req.param('layout') == 'state'
+      ? moment(req.param("sprintStart")).toDate()
+      : moment().subtract('days', req.param('range') || 2).sod().toDate()
+
     Activity.findAll({
-      where: [
-        "ownedBy = ? and updatedAt > ?",
-        username.trim(),
-        moment().subtract('days', req.param('range') || 2).sod().toDate()
-      ]
+      where: [ "ownedBy = ? and updatedAt > ?", username.trim(), updatedAt ]
     }).success(function(activities) {
       res.render('activity-layouts/' + (req.param('layout') || 'user'), {
         username: username,
