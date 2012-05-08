@@ -97,11 +97,33 @@ table.well {
     }
 
     .labels {
-      float: right;
+      position: relative;
+
       .label {
-        margin-left: 5px;
-        background-color: #bbb;
+        margin-right: 5px;
       }
+    }
+
+    .story-type {
+      text-transform: uppercase;
+      font-size: 20px;
+      background: none;
+      position: absolute;
+      right: -6px;
+      color: whiteSmoke;
+      bottom: -5px;
+    }
+
+    &.feature {
+      background-color: rgba(69,102, 52, 0.3)
+    }
+
+    &.bug {
+      background-color: rgba(200, 10, 10, 0.4)
+    }
+
+    &.chore {
+      background-color: rgba(100, 100, 100, 0.3)
     }
   }
 }

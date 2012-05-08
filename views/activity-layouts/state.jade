@@ -6,14 +6,15 @@ td= username
     - activities.forEach(function(activity) {
       - var slug = activity.title.toSlug()
       - if(activity.status.toLowerCase() == state.toLowerCase()) {
-        .activity
+        div(class="activity #{activity.storyType.toLowerCase()}")
           a(href='#' + slug, name=slug)
             | #{activity.title} (#{activity.updatedAt})
+          != labelForStoryType(activity)
           .labels
             - activity.getLabels().forEach(function(label) {
-              span.label.label-success= label
+              span.label= label
             - })
-          .story-types!= labelForStoryType(activity)
+          .clear
       - }
     - })
 - })
