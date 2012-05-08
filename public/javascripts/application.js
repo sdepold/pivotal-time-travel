@@ -1,9 +1,14 @@
 Application = {
   Index: {
     init: function() {
+      this.Slider.permanentize()
+      this.LayoutChooser.permanentize()
+      this.SprintStart.permanentize()
+
       this.Slider.init()
       this.LayoutChooser.init()
       this.SprintStart.init()
+
       this.loadStories()
     },
 
@@ -54,8 +59,6 @@ Application = {
       init: function() {
         var self = this
 
-        this.permanentize()
-
         this.getElement().change(function() {
           location.href = '/?layout=' + self.getValue()
         })
@@ -83,8 +86,6 @@ Application = {
     Slider: {
       init: function() {
         var self = this
-
-        this.permanentize()
 
         this.getElement().slider({
           min: 1,
@@ -125,7 +126,6 @@ Application = {
 
     SprintStart: {
       init: function() {
-        this.permanentize()
         this.getElement().datepicker().change(function() {
           Application.Index.loadStories()
         })
