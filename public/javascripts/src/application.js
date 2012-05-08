@@ -1,9 +1,14 @@
 Application = {
   Index: {
     init: function() {
+      this.Slider.permanentize()
+      this.LayoutChooser.permanentize()
+      this.SprintStart.permanentize()
+
       this.Slider.init()
       this.LayoutChooser.init()
       this.SprintStart.init()
+
       this.loadStories()
     },
 
@@ -13,13 +18,13 @@ Application = {
       switch(Application.Index.LayoutChooser.getValue()) {
         case 'user':
           self.loadStoriesForUserLayout()
-          break;
+          break
         case 'state':
           self.loadStoriesForStateLayout()
-          break;
+          break
         default:
           throw new Error('Unknown layout choosen.')
-          break;
+          break
       }
     },
 
@@ -54,8 +59,6 @@ Application = {
       init: function() {
         var self = this
 
-        this.permanentize()
-
         this.getElement().change(function() {
           location.href = '/?layout=' + self.getValue()
         })
@@ -73,7 +76,12 @@ Application = {
         var $layoutSelector = this.getElement()
           , self            = this
 
-        $layoutSelector.val($.cookie('layout'))
+        if($.cookie('layout') && (document.location.href.indexOf('layout=' + $.cookie('layout')) == -1)) {
+          document.location.href = "/?layout=" + $.cookie('layout')
+        } else {
+          $layoutSelector.val($.cookie('layout'))
+        }
+
         $layoutSelector.change(function() {
           $.cookie('layout', self.getValue())
         })
@@ -83,8 +91,6 @@ Application = {
     Slider: {
       init: function() {
         var self = this
-
-        this.permanentize()
 
         this.getElement().slider({
           min: 1,
@@ -125,7 +131,6 @@ Application = {
 
     SprintStart: {
       init: function() {
-        this.permanentize()
         this.getElement().datepicker().change(function() {
           Application.Index.loadStories()
         })
