@@ -106,7 +106,8 @@ app.post('/activities', function(req, res) {
 })
 
 app.get('/activities', function(req, res) {
-  var updatedAt = moment(req.param("sprintStart")).toDate()
+  var sprintStart = req.param("sprintStart")
+    , updatedAt   = moment(sprintStart).toDate()
 
   Activity.findAll({
     where: [ "updatedAt > ?", updatedAt ]
