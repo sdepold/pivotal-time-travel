@@ -35,7 +35,6 @@ Layout.ScrumBoard = (function() {
   /////////////
 
   var getActivities = function(callback) {
-    console.log(callback)
     $.getJSON('/activities', {
       sprintStart: Application.Index.SprintStart.getValue()
     }).success(function(data) {
@@ -66,12 +65,19 @@ Layout.ScrumBoard = (function() {
 
     activities.forEach(function(activity) {
       var story = $('<div class="activity ' + activity.storyType + '">')
-        .text(activity.title)
+        .html(activity.updatedAt + '<br/>' + activity.title)
         .appendTo($('[data-state=' + activity.status.toLowerCase() + ']', tr))
 
-      story.append(
-        $('<div class="label story-type">').text(activity.storyType)
-      )
+      var storyType = $('<div class="label story-type">').text(activity.storyType)
+      var storyLabels = $('<div class="labels">')
+
+      if(activity.labels !== null) {
+        activity.labels.split(',').forEach(function(label) {
+          storyLabels.append($('<span class="label">').text(label))
+        })
+      }
+
+      story.append(storyType).append(storyLabels)
     })
   }
 

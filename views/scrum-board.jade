@@ -1,5 +1,8 @@
 script
   $(function() {
+    Application.Index.SprintStart.permanentize(true)
+    Application.Index.SprintStart.init(true)
+
     new Layout.ScrumBoard('#scrum-board-content').render()
   })
 
