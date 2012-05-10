@@ -12,9 +12,9 @@ const express   = require("express")
 // variables
 
 var sequelize = new Sequelize(config.dbName, config.dbUsername, config.dbPassword, {
-      logging: false//,
-      // dialect: 'sqlite',
-      // storage: 'database.sqlite'
+      logging: false,
+      dialect: 'sqlite',
+      storage: 'database.sqlite'
     })
   , tracker   = new Tracker(sequelize, config.token, {
       projectId: config.projectId
@@ -106,9 +106,7 @@ app.post('/activities', function(req, res) {
 })
 
 app.get('/activities', function(req, res) {
-  var updatedAt = req.param('layout') == 'state'
-    ? moment(req.param("sprintStart")).toDate()
-    : moment().subtract('days', req.param('range') || 2).sod().toDate()
+  var updatedAt = moment(req.param("sprintStart")).toDate()
 
   Activity.findAll({
     where: [ "updatedAt > ?", updatedAt ]
