@@ -18,11 +18,17 @@ Layout.ScrumBoard = (function() {
   ScrumBoard.prototype.render = function() {
     var self = this
     getActivities.call(this, function(data) {
+      var usernames = []
+
       for(var username in data) {
+        usernames.push(username)
+      }
+
+      usernames.sort().forEach(function(username) {
         if(username !== "null") {
           renderUserRow.call(self, username, data[username])
         }
-      }
+      })
 
       renderUserRow.call(self, 'Unassigned', data['null'])
     })

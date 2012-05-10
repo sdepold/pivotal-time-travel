@@ -73,12 +73,17 @@ body {
 
 table.well {
   width: 100%;
+  border: 1px solid #aaa;
 
   tr {
     td, th {
-      border-bottom: 1px solid #ccc;
-      padding: 5px;
+      border-bottom: 1px solid #aaa;
+      border-right: 1px dashed #aaa;
+      padding: 3px;
       vertical-align: top;
+    }
+    td:last-child, th:last-child {
+      border-right: none;
     }
   }
 }
