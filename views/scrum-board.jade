@@ -1,7 +1,6 @@
 script
   $(function() {
-    Application.Index.init()
-    new Layout.ScrumBoard().render()
+    new Layout.ScrumBoard('#scrum-board-content').render()
   })
 
 h1 PivotalTacker TimeTravel
@@ -13,16 +12,7 @@ h1 PivotalTacker TimeTravel
     = "Project: " + config.projectId
     = ", Activities: " + activityCount
 
-br
-br
-
-#layoutChooser
-  | Choose a layout/focus:
-  br
-  select(name="layout", size="1")
-    - boardLayouts.forEach(function(_boardLayout) {
-      option(selected=(_boardLayout == boardLayout))= _boardLayout
-    - })
+br * 2
 
 #dataRangeSliderContainer
   #dataRangeSliderValue
@@ -35,4 +25,4 @@ br
   br
   input(type='text', name='sprintStart')
 
-!= partial('index-layouts/' + boardLayout)
+#scrum-board-content
