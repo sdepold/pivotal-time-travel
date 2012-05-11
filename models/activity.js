@@ -5,9 +5,13 @@ module.exports = function(sequelize, DataTypes) {
     status:      DataTypes.STRING,
     ownedBy:     DataTypes.STRING,
     requestedBy: DataTypes.STRING,
-    labels:       DataTypes.STRING,
+    labels:      DataTypes.STRING,
     createdAt:   DataTypes.DATE,
-    updatedAt:   DataTypes.DATE
+    updatedAt:   DataTypes.DATE,
+    startedAt:   {
+      type: DataTypes.DATE,
+      defaultValue: null
+    }
   }, {
     timestamps: false,
     instanceMethods: {

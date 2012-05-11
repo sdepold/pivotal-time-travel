@@ -94,9 +94,17 @@ var createActivityEntriesFromApiData = function(err, data) {
             createdAt:   createdAt
           }
 
+      if(story.current_state.toLowerCase() == 'started') {
+        options.startedAt = updatedAt
+      }
+
       if(activity) {
         activity.updateAttributes(options)
       } else {
+        if(story.current_state.toLowerCase() != 'started') {
+          options.startedAt = null
+        }
+
         options.id = story.id
         Activity.create(options)
       }
