@@ -110,7 +110,7 @@ app.get('/activities', function(req, res) {
     , updatedAt   = moment(sprintStart).toDate()
 
   Activity.findAll({
-    where: [ "updatedAt > ?", updatedAt ]
+    where: [ "updatedAt > ? OR (status <> 'accepted' and status <> 'unstarted' and status <> 'unscheduled')", updatedAt ]
   }).success(function(activities) {
     var activitiesPerUser = {}
 
