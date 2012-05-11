@@ -31,6 +31,7 @@ Layout.ScrumBoard = (function() {
       })
 
       renderUserRow.call(self, 'Unassigned', data['null'])
+      shrinkUserRows.call(self)
     })
 
     renderHeadlines.call(this)
@@ -85,6 +86,71 @@ Layout.ScrumBoard = (function() {
 
       story.append(storyType).append(storyLabels)
     })
+  }
+
+  var shrinkUserRows = function() {
+    var self = this
+
+    $('tr', this.table).each(function() {
+      shrinkUserRow.call(self, $(this))
+    })
+  }
+
+  var shrinkUserRow = function($row) {
+    var self = this
+
+    $('td', $row).each(function() {
+      shrinkUserColumn.call(self, $(this))
+    })
+  }
+
+  var shrinkUserColumn = function($td) {
+    var self        = this
+      , $activities = $('.activity', $td)
+
+    $('> a', $td).remove()
+
+    if($activities.length > 3) {
+      $activities.each(function(index) {
+        if(index > 2) {
+          $(this).hide()
+        }
+      })
+
+      var collapseLink = $('<a>')
+
+      collapseLink
+        .text('Show ' + ($activities.length - 3) + ' further stories.')
+        .attr('href', '#')
+        .click(function() {
+          expandUserColumn.call(self, $td)
+          return false
+        })
+
+      $td.append(collapseLink)
+    }
+  }
+
+  var expandUserColumn = function($td) {
+    var self        = this
+      , $activities = $('.activity', $td)
+
+    $activities.each(function() {
+      $(this).show()
+    })
+
+    $('> a', $td).remove()
+    var shrinkLink = $('<a>')
+
+    shrinkLink
+      .text('Shrink stories to length of 3.')
+      .attr('href', '#')
+      .click(function() {
+        shrinkUserColumn.call(self, $td)
+        return false
+      })
+
+    $td.append(shrinkLink)
   }
 
   return ScrumBoard
