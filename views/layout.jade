@@ -8,12 +8,20 @@ html
     link(rel='stylesheet', href='/styles.css')
     link(rel='stylesheet', href='/stylesheets/ui-lightness/jquery-ui-1.8.19.custom.css')
 
+    // jquery
     script(src='/javascripts/lib/jquery-1.7.1.min.js')
     script(src='/javascripts/lib/jquery-ui-1.8.19.custom.min.js')
     script(src='/javascripts/lib/jquery.cookie.js')
+
+    // bootstrap
     script(src='/javascripts/lib/bootstrap.js')
-    script(src='/javascripts/src/layout.js')
-    script(src='/javascripts/src/layout.scrum-board.js')
+
+    // pivotal-time-travel
+    script(src='/javascripts/src/pivotal-time-travel.js')
+    script(src='/javascripts/src/pivotal-time-travel/layout.js')
+    script(src='/javascripts/src/pivotal-time-travel/sprint-start.js')
+    script(src='/javascripts/src/pivotal-time-travel/layout/scrum-board.js')
+
     script(src='/javascripts/src/application.js')
 
   body(class=(boardLayout || 'user'))
