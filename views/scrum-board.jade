@@ -1,9 +1,7 @@
 script
   $(function() {
-    Application.Index.SprintStart.permanentize(true)
-    Application.Index.SprintStart.init(true)
-
-    new Layout.ScrumBoard('#scrum-board-content').render()
+    var sprintStart = new PivotalTimeTravel.SprintStart('#sprintStartContainer input')
+    new PivotalTimeTravel.Layout.ScrumBoard('#scrum-board-content', sprintStart).render()
   })
 
 h1 PivotalTacker TimeTravel
@@ -16,12 +14,6 @@ h1 PivotalTacker TimeTravel
     = ", Activities: " + activityCount
 
 br * 2
-
-#dataRangeSliderContainer
-  #dataRangeSliderValue
-    | Choose a time travel range:
-    span
-  #dataRangeSlider
 
 #sprintStartContainer
   | Choose the start date of the current sprint:
