@@ -1,4 +1,4 @@
-Layout.ScrumBoard = (function() {
+PivotalTimeTravel.Layout.ScrumBoard = (function() {
   "use strict"
 
   var scrumStates = {
@@ -10,15 +10,27 @@ Layout.ScrumBoard = (function() {
     'Accepted':  'Accepted'
   }
 
-  var ScrumBoard = function(selector) {
-    this.element = $(selector)
-    this.table   = $('<table class="well" cellpadding="0" cellspacing="0" border="0">').appendTo(this.element)
+  var ScrumBoard = function(selector, sprintStart) {
+    var self = this
+
+    this.element     = $(selector)
+    this.table       = $('<table class="well" cellpadding="0" cellspacing="0" border="0">').appendTo(this.element)
+    this.sprintStart = sprintStart
+
+    $(this.sprintStart).on('change', function() {
+      console.log('changed')
+      self.render()
+    })
   }
 
   ScrumBoard.prototype.render = function() {
     var self = this
+
     getActivities.call(this, function(data) {
       var usernames = []
+
+      clearTable.call(self)
+      renderHeadlines.call(self)
 
       for(var username in data) {
         usernames.push(username)
@@ -33,8 +45,6 @@ Layout.ScrumBoard = (function() {
       renderUserRow.call(self, 'Unassigned', data['null'])
       shrinkUserRows.call(self)
     })
-
-    renderHeadlines.call(this)
   }
 
   /////////////
@@ -43,12 +53,16 @@ Layout.ScrumBoard = (function() {
 
   var getActivities = function(callback) {
     $.getJSON('/activities', {
-      sprintStart: Application.Index.SprintStart.getValue()
+      sprintStart: this.sprintStart.getValue()
     }).success(function(data) {
       callback && callback(data)
     }).error(function(err) {
       console.log(err)
     })
+  }
+
+  var clearTable = function() {
+    this.table.empty()
   }
 
   var renderHeadlines = function() {
@@ -70,7 +84,7 @@ Layout.ScrumBoard = (function() {
       tr.append($('<td>').attr('data-state', state.toLowerCase()))
     }
 
-    activities.forEach(function(activity) {
+    (activities || []).forEach(function(activity) {
       var story = $('<div class="activity ' + activity.storyType + '">')
         .html(activity.updatedAt + '<br/>' + activity.title)
         .appendTo($('[data-state=' + activity.status.toLowerCase() + ']', tr))
