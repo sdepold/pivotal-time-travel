@@ -1,38 +1,42 @@
 script
-  $(function() {
-    Application.Index.init()
-    new Layout.ScrumBoard().render()
-  })
+  document.location.href="/scrum-board"
 
-h1 PivotalTacker TimeTravel
 
-#project-information
-  span.icon-info-sign
-  span
-    = "&nbsp;"
-    = "Project: " + config.projectId
-    = ", Activities: " + activityCount
+//- script
+//-   $(function() {
+//-     Application.Index.init()
+//-     new Layout.ScrumBoard().render()
+//-   })
 
-br
-br
+//- h1 PivotalTacker TimeTravel
 
-#layoutChooser
-  | Choose a layout/focus:
-  br
-  select(name="layout", size="1")
-    - boardLayouts.forEach(function(_boardLayout) {
-      option(selected=(_boardLayout == boardLayout))= _boardLayout
-    - })
+//- #project-information
+//-   span.icon-info-sign
+//-   span
+//-     = "&nbsp;"
+//-     = "Project: " + config.projectId
+//-     = ", Activities: " + activityCount
 
-#dataRangeSliderContainer
-  #dataRangeSliderValue
-    | Choose a time travel range:
-    span
-  #dataRangeSlider
+//- br
+//- br
 
-#sprintStartContainer
-  | Choose the start date of the current sprint:
-  br
-  input(type='text', name='sprintStart')
+//- #layoutChooser
+//-   | Choose a layout/focus:
+//-   br
+//-   select(name="layout", size="1")
+//-     - boardLayouts.forEach(function(_boardLayout) {
+//-       option(selected=(_boardLayout == boardLayout))= _boardLayout
+//-     - })
 
-!= partial('index-layouts/' + boardLayout)
+//- #dataRangeSliderContainer
+//-   #dataRangeSliderValue
+//-     | Choose a time travel range:
+//-     span
+//-   #dataRangeSlider
+
+//- #sprintStartContainer
+//-   | Choose the start date of the current sprint:
+//-   br
+//-   input(type='text', name='sprintStart')
+
+//- != partial('index-layouts/' + boardLayout)
