@@ -86,7 +86,11 @@ PivotalTimeTravel.Layout.ScrumBoard = (function() {
 
     (activities || []).forEach(function(activity) {
       var story = $('<div class="activity ' + activity.storyType + '">')
-        .html(activity.updatedAt + '<br/>' + activity.title)
+        .html([
+          '<strong>' + activity.title + '</strong>',
+          '<br/>',
+          moment(activity.updatedAt).format('YYYY-MM-DD')
+        ].join(''))
         .appendTo($('[data-state=' + activity.status.toLowerCase() + ']', tr))
 
       var storyType = $('<div class="label story-type">').text(activity.storyType)
