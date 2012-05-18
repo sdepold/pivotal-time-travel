@@ -85,16 +85,19 @@ PivotalTimeTravel.Layout.ScrumBoard = (function() {
     }
 
     (activities || []).forEach(function(activity) {
-      var story = $('<div class="activity ' + activity.storyType + '">')
-        .html([
-          '<strong>' + activity.title + '</strong>',
-          '<br/>',
-          moment(activity.updatedAt).format('YYYY-MM-DD')
-        ].join(''))
-        .appendTo($('[data-state=' + activity.status.toLowerCase() + ']', tr))
+      var startedAtInt       = (moment(activity.startedAt).unix() * 1000)
+        , formattedStartedAt = moment(activity.startedAt).format('YYYY-MM-DD')
+        , formattedUpdatedAt = moment(activity.updatedAt).format('YYYY-MM-DD')
+        , storyRuntime       = (moment(activity.updatedAt).unix() * 1000) - startedAtInt
+        , formattedStoryRuntime = ((startedAtInt === 0) || (storyRuntime < (1000 * 60 * 60 * 24)))
+            ? ''
+            : (' ∆' + moment(storyRuntime).format('DD'))
+        , formattedTitle     = ('<strong>' + activity.title + '</strong>')
+        , storyContent       = [formattedTitle, '<br/>', formattedUpdatedAt, formattedStoryRuntime].join('')
+        , storyType          = $('<div class="label story-type">').text(activity.storyType)
+        , storyLabels        = $('<div class="labels">')
 
-      var storyType = $('<div class="label story-type">').text(activity.storyType)
-      var storyLabels = $('<div class="labels">')
+console.log(moment(moment(activity.updatedAt).unix() * 1000), moment(startedAtInt), (moment(activity.updatedAt).unix() * 1000) - startedAtInt)
 
       if(activity.labels !== null) {
         activity.labels.split(',').forEach(function(label) {
@@ -102,7 +105,11 @@ PivotalTimeTravel.Layout.ScrumBoard = (function() {
         })
       }
 
-      story.append(storyType).append(storyLabels)
+      $('<div class="activity ' + activity.storyType + '">')
+        .html(storyContent)
+        .append(storyType)
+        .append(storyLabels)
+        .appendTo($('[data-state=' + activity.status.toLowerCase() + ']', tr))
     })
   }
 
