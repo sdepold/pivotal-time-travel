@@ -75,8 +75,10 @@ var createActivityEntriesFromApiData = function(err, data) {
     return console.log(err)
   }
 
-  if(!data || !data.story || !Array.isArray(data.story) || (data.story.length == 0)) {
+  if(!data || !data.story) {
     return console.log(data)
+  } else if(!Array.isArray(data.story)) {
+    data.story = [ data.story ]
   }
 
   data.story.forEach(function(story) {
