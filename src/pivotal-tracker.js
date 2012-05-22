@@ -71,11 +71,13 @@ var iteratePivotal = function(callback) {
 var createActivityEntriesFromApiData = function(err, data) {
   var Activity = this.sequelize.daoFactoryManager.getDAO('Activity')
 
-  if(err && err.errors)
-    return console.log(err.errors.error[0])
+  if(err && err.errors) {
+    return console.log(err)
+  }
 
-  if(!data || !data.story || !Array.isArray(data.story) || ( data.story.length == 0))
-    return
+  if(!data || !data.story || !Array.isArray(data.story) || (data.story.length == 0)) {
+    return console.log(data)
+  }
 
   data.story.forEach(function(story) {
     util.print('.')
