@@ -87,6 +87,10 @@ var iteratePivotal = function(callback) {
         if (!data) {
           data = _data
           data.story = data.story || []
+
+          if (!Array.isArray(data.story)) {
+            data.story = [data.story]
+          }
         } else {
           data.story = data.story.concat(_data.story)
         }
