@@ -128,5 +128,5 @@ app.get('/activities', function(req, res) {
 
 // bind app to port
 
-app.listen(process.env.PORT || 3000)
+app.listen(process.env.PORT || 3000, process.env.HOSTNAME)
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env)
