@@ -32,6 +32,10 @@ $ node app.js
   // e.g.: https://www.pivotaltracker.com/projects/123456789
   "projectId": 123456789,
 
+  // you can also use multiple project ids
+  // if this option is available, the projectId is ignored
+  "projectIds": [123, 456, 789],
+
   // add the user token here
   "token": "abcd1234"
 }
