@@ -16,9 +16,7 @@ var sequelize = new Sequelize(config.dbName, config.dbUsername, config.dbPasswor
       dialect: 'sqlite',
       storage: 'database.sqlite'
     })
-  , tracker   = new Tracker(sequelize, config.token, {
-      projectId: config.projectId
-    })
+  , tracker   = new Tracker(sequelize, config.token, config)
   , app       = module.exports = express.createServer()
   , Activity  = sequelize.import(__dirname + '/models/activity')
 

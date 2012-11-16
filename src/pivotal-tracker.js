@@ -10,7 +10,8 @@ var PivotalTracker = module.exports = function(sequelize, token, options) {
   this.currentlySyncing = false
   this.options          = _.extend({
     itemsPerIteration: 500,
-    projectId:         null
+    projectId:         null,
+    projectIds:        []
   }, options || {})
 
   pivotal.useToken(this.token)
@@ -61,11 +62,45 @@ PivotalTracker.prototype.scheduleUpdate = function(options) {
 /////////////
 
 var iteratePivotal = function(callback) {
-  pivotal.getStories(this.options.projectId, {
-    filter: 'includedone:true',
-    offset: this.offset,
-    limit:  this.options.itemsPerIteration
-  }, callback)
+  var initSync = function(id, callback) {
+    pivotal.getStories(id, {
+      filter: 'includedone:true',
+      offset: this.offset,
+      limit:  this.options.itemsPerIteration
+    }, callback)
+  }.bind(this)
+
+  if (this.options.projectIds) {
+    var done = 0
+      , err  = null
+      , data = null
+
+    this.options.projectIds.forEach(function(id) {
+      initSync(id, function(_err, _data) {
+        done += 1
+
+        if (!!err) {
+          console.log(_err)
+          err = _err
+        }
+
+        if (!data) {
+          data = _data
+          data.story = data.story || []
+        } else {
+          data.story = data.story.concat(_data.story)
+        }
+
+        if (done === this.options.projectIds.length) {
+          data.story = data.story.filter(function(entry) { return !!entry })
+          callback && callback(err, data)
+        }
+      }.bind(this))
+    }.bind(this))
+  } else {
+    initSync(this.options.projectId, callback)
+  }
+
 }
 
 var createActivityEntriesFromApiData = function(err, data) {
