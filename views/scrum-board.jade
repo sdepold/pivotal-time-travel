@@ -10,8 +10,16 @@ h1 PivotalTacker TimeTravel
   span.icon-info-sign
   span
     = "&nbsp;"
-    = "Project: " + config.projectId
-    = ", Activities: " + activityCount
+    - if (config.projectIds) {
+      = "Projects: " + (config.projectIds.join(', '))
+    - } else {
+      = "Project: " + (config.projectId)
+    - }
+  br
+  span.icon-info-sign
+  span
+    = "&nbsp;"
+    = "Activities: " + activityCount
 
 br * 2
 
